@@ -7,7 +7,8 @@ const {
   getFilterById,
   updateFilter,
   deleteFilter,
-  addModules
+  addModules,
+  getModules
 } = require("../controller/filecontroller");
 
 // Routes
@@ -17,5 +18,5 @@ router.get("/filtersbyId",verifyToken, getFilterById);
 router.put("/filters/",verifyToken, updateFilter);
 router.delete("/filters/",verifyToken, deleteFilter);
 router.post("/addModules",verifyToken, addModules);
-
+router.get("/getModules/",verifyToken,getModules);
 module.exports = router;

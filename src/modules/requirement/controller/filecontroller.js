@@ -1,5 +1,8 @@
 const { Filter } = require("../model/model");
-const verifyToken=require("../../../middleware/authmiddleware")
+const { ObjectId } = require("mongoose").Types;
+const mongoose = require("mongoose");
+
+const verifyToken = require("../../../middleware/authmiddleware");
 // Create a new filter
 const createFilter = async (req, res) => {
   try {
@@ -24,24 +27,93 @@ const createFilter = async (req, res) => {
   }
 };
 
+// const addModules = async (req, res) => {
+//   try {
+//     const { id, modules, dataId } = req.body;
+
+//     // Find and update the specific value in the data array
+//     const updatedFilter = await Filter.findOneAndUpdate(
+//       { _id: id, "data._id": dataId },
+//       { $push: { "data.$.modules": { $each: modules } } },
+//       { new: true }
+//     );
+
+//     res
+//       .status(200)
+//       .json({ message: "Filter updated successfully", filter: updatedFilter });
+//   } catch (error) {
+//     res
+//       .status(500)
+//       .json({ message: "Error updating filter", error: error.message });
+//   }
+// };
+
 const addModules = async (req, res) => {
   try {
     const { id, modules, dataId } = req.body;
 
-    // Find and update the specific value in the data array
+    // Validate that modules is an array
+    if (!Array.isArray(modules) || modules.length === 0) {
+      return res
+        .status(400)
+        .json({ message: "Modules must be a non-empty array" });
+    }
+
+    // Perform the update operation
     const updatedFilter = await Filter.findOneAndUpdate(
       { _id: id, "data._id": dataId },
       { $push: { "data.$.modules": { $each: modules } } },
       { new: true }
     );
 
+    if (!updatedFilter) {
+      return res.status(404).json({ message: "Filter or data item not found" });
+    }
+
     res
       .status(200)
       .json({ message: "Filter updated successfully", filter: updatedFilter });
   } catch (error) {
+    console.error("Error updating filter:", error.message);
     res
       .status(500)
       .json({ message: "Error updating filter", error: error.message });
+  }
+};
+
+// Get modules by filter ID and data ID
+
+const getModules = async (req, res) => {
+  try {
+    const { id, dataId } = req.query;
+    console.log("Received ID:", id);
+    console.log("Received Data ID:", dataId);
+
+    // Convert `id` and `dataId` to ObjectId
+    const objectId = new mongoose.Types.ObjectId(id);
+    console.log("Converted ObjectId:", objectId);
+
+    const filter = await Filter.findOne({ _id: objectId });
+    console.log("Filter Found:", filter);
+
+    if (!filter) {
+      return res.status(404).json({ message: "Filter not found" });
+    }
+
+    const dataObjectId = new mongoose.Types.ObjectId(dataId);
+    const dataItem = filter.data.find((item) => item._id.equals(dataObjectId));
+    console.log("Data Item Found:", dataItem);
+
+    if (!dataItem) {
+      return res.status(404).json({ message: "Data item not found" });
+    }
+
+    res.status(200).json({ modules: dataItem.modules });
+  } catch (error) {
+    console.error("Error:", error.message);
+    res
+      .status(500)
+      .json({ message: "Error fetching modules", error: error.message });
   }
 };
 
@@ -60,13 +132,28 @@ const getAllFilters = async (req, res) => {
 // Get a filter by ID
 const getFilterById = async (req, res) => {
   try {
-    const filter = await Filter.findOne({
-      $or: [{ title: req.query.title }, { _id: req.query.id }],
-    });
-    if (!filter) {
+    const { title, id, dataId } = req.query;
+
+    let pipeLine = [
+      {
+        $match: {
+          $or: [{ title: title }, { _id: new mongoose.Types.ObjectId(id) }],
+        },
+      },
+    ];
+
+    if (req.query.dataId) {
+      pipeLine.push({ $unwind: "$data" });
+      pipeLine.push({
+        $match: { "data._id": new mongoose.Types.ObjectId(dataId) },
+      });
+    }
+
+    const filter = await Filter.aggregate(pipeLine);
+    if (filter.length === 0) {
       return res.status(404).json({ message: "Filter not found" });
     }
-    res.status(200).json(filter);
+    res.status(200).json(filter[0]);
   } catch (error) {
     res
       .status(500)
@@ -129,4 +216,5 @@ module.exports = {
   updateFilter,
   deleteFilter,
   addModules,
+  getModules,
 };

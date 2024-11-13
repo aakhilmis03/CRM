@@ -1,18 +1,21 @@
 const express = require("express");
 const router = express.Router();
+const verifyToken=  require("../../../middleware/authmiddleware");
 const {
   createFilter,
   getAllFilters,
   getFilterById,
   updateFilter,
-  deleteFilter
+  deleteFilter,
+  addModules
 } = require("../controller/filecontroller");
 
 // Routes
-router.post("/filters", createFilter);
-router.get("/filters", getAllFilters);
-router.get("/filtersbyId", getFilterById);
-router.put("/filters/", updateFilter);
-router.delete("/filters/", deleteFilter);
+router.post("/filters", verifyToken,createFilter);
+router.get("/filters", verifyToken,getAllFilters);
+router.get("/filtersbyId",verifyToken, getFilterById);
+router.put("/filters/",verifyToken, updateFilter);
+router.delete("/filters/",verifyToken, deleteFilter);
+router.post("/addModules",verifyToken, addModules);
 
 module.exports = router;

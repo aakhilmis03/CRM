@@ -148,35 +148,35 @@ const contactSchema = new mongoose.Schema({
 const requirementSchema = new mongoose.Schema({
   requirement: {
     type: [String],
-    enum: ['E-Commerce','Real State ','Custom CRM/ERP', 'Custom  Apps Project','Education Project','Health Care & Pharmacy','Market Place','Travel and Hospitality','Game Development','Fintech Project'],
+    // enum: ['E-Commerce','Real State ','Custom CRM/ERP', 'Custom  Apps Project','Education Project','Health Care & Pharmacy','Market Place','Travel and Hospitality','Game Development','Fintech Project'],
     required: true,
   },
   modules: {
     type: String,
-    enum:['Property Website','Bu sell market place','Rental Software','property management system CRM','Vendor Module','SALE CRM ','Buyer App','Owner APP', 'Seller app']
+    // enum:['Property Website','Bu sell market place','Rental Software','property management system CRM','Vendor Module','SALE CRM ','Buyer App','Owner APP', 'Seller app']
   },
   application: {
     type: [String],
-    enum: ['Android Native', 'Native Android', 'Native iOS', 'Flutter App', 'Others'],
+    // enum: ['Android Native', 'Native Android', 'Native iOS', 'Flutter App', 'Others'],
     required: true,
   },
   api: {
     type: [String],
-    enum: [ 'Payment Gateway','SMS API','Google Firebase','WhatsApp API','Shipping API','Others'],
+    // enum: [ 'Payment Gateway','SMS API','Google Firebase','WhatsApp API','Shipping API','Others'],
   },
   support: {
     type: String,
-    enum: ['Required', 'Not Required', 'Paid Support', 'Free Support'],
+    // enum: ['Required', 'Not Required', 'Paid Support', 'Free Support'],
     required: true,
   },
   technology: {
     type: [String],
-    enum: ['NodeJs', 'Laravel', 'Code Ignitor', 'PHP', '.Net', 'Others'],
+    // enum: ['NodeJs', 'Laravel', 'Code Ignitor', 'PHP', '.Net', 'Others'],
     required: true,
   },
   server: {
     type: [String],
-    enum: ['Dedicated', 'AWS', 'Shared Server', 'Client Server', 'Others'],
+    // enum: ['Dedicated', 'AWS', 'Shared Server', 'Client Server', 'Others'],
     required: true,
   },
   description: {

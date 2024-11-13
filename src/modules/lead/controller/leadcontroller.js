@@ -1,9 +1,9 @@
 const express = require('express');
 const Lead = require('../models/leadmodel');
 const router = express.Router();
-
+const verifyToken=require("../../../middleware/authmiddleware")
 // Create a new lead
-router.post('/leads', async (req, res) => {
+router.post('/leads', verifyToken,async (req, res) => {
   try {
     const newLead = new Lead(req.body);
     const savedLead = await newLead.save();
@@ -14,7 +14,7 @@ router.post('/leads', async (req, res) => {
 });
 
 // Get all leads
-router.get('/leads', async (req, res) => {
+router.get('/leads', verifyToken,async (req, res) => {
   try {
     const leads = await Lead.find();
     res.json(leads);

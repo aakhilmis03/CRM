@@ -1,7 +1,7 @@
 const express=require("express")
 const mongoose=require("mongoose")
 const router=express();
-
+const verifyToken=require("../../../middleware/authmiddleware")
 const bodyParser=require('body-parser');
 
 const {Lead} = require("../../lead/models/leadmodel")
@@ -9,12 +9,11 @@ const {Lead} = require("../../lead/models/leadmodel")
 const {
     getCountries, getState, getCity}= require("../controller/buisnesscontroller");
 
-router.get('/get-countries',getCountries);
+router.get('/get-countries',verifyToken,getCountries);
+router.get('/get-state',verifyToken,getState);
+router.get('/get-city',verifyToken,getCity);
 
-router.get('/get-state',getState);
-router.get('/get-city',getCity);
-
-router.post('/buisness-info', async (req, res) => {
+router.post('/buisness-info', verifyToken,async (req, res) => {
     const {
       companyName,
       country,
@@ -55,7 +54,7 @@ router.post('/buisness-info', async (req, res) => {
       }
     });
 
-router.post('/Followup', async(req,res)=> {
+router.post('/Followup', verifyToken,async(req,res)=> {
     const{
     leadstatus,
     priority,
@@ -73,7 +72,7 @@ router.post('/Followup', async(req,res)=> {
       }
 });
 
-router.get('/followup', async (req, res) => {
+router.get('/followup',verifyToken, async (req, res) => {
     try {
       const followups = await Followup.find();
       res.json(followups);
@@ -83,7 +82,7 @@ router.get('/followup', async (req, res) => {
   });
   
   // Update a follow-up record by ID
-  router.put('/followup/:id', async (req, res) => {
+  router.put('/followup/:id', verifyToken,async (req, res) => {
     try {
       const updatedFollowup = await Followup.findByIdAndUpdate(req.params.id, req.body, { new: true });
       res.json(updatedFollowup);
@@ -93,7 +92,7 @@ router.get('/followup', async (req, res) => {
   });
   
   // Delete a follow-up record by ID
-  router.delete('/followup/:id', async (req, res) => {
+  router.delete('/followup/:id',verifyToken, async (req, res) => {
     try {
       await Followup.findByIdAndDelete(req.params.id);
       res.json({ message: 'Follow-up record deleted successfully' });
@@ -102,7 +101,7 @@ router.get('/followup', async (req, res) => {
     }
   });
 
-  router.post('/contacts', async (req, res) => {
+  router.post('/contacts',verifyToken, async (req, res) => {
     try {
       const newContact = new Contact(req.body);
       const savedContact = await newContact.save();
@@ -113,7 +112,7 @@ router.get('/followup', async (req, res) => {
   });
   
   // Get all contacts
-  router.get('/contacts', async (req, res) => {
+  router.get('/contacts', verifyToken,async (req, res) => {
     try {
       const contacts = await Contact.find();
       res.json(contacts);
@@ -123,7 +122,7 @@ router.get('/followup', async (req, res) => {
   });
   
   // Get a single contact by ID
-  router.get('/contacts/:id', async (req, res) => {
+  router.get('/contacts/:id', verifyToken,async (req, res) => {
     try {
       const contact = await Contact.findById(req.params.id);
       if (!contact) return res.status(404).json({ message: 'Contact not found' });
@@ -134,7 +133,7 @@ router.get('/followup', async (req, res) => {
   });
   
   // Update a contact by ID
-  router.put('/contacts/:id', async (req, res) => {
+  router.put('/contacts/:id',verifyToken, async (req, res) => {
     try {
       const updatedContact = await Contact.findByIdAndUpdate(req.params.id, req.body, {
         new: true,
@@ -147,7 +146,7 @@ router.get('/followup', async (req, res) => {
   });
   
   // Delete a contact by ID
-  router.delete('/contacts/:id', async (req, res) => {
+  router.delete('/contacts/:id', verifyToken,async (req, res) => {
     try {
       const deletedContact = await Contact.findByIdAndDelete(req.params.id);
       if (!deletedContact) return res.status(404).json({ message: 'Contact not found' });
@@ -158,7 +157,7 @@ router.get('/followup', async (req, res) => {
   });
 
 
-  router.post('/requirement', async (req, res) => {
+  router.post('/requirement', verifyToken,async (req, res) => {
     try {
       const requirement = new Requirement(req.body);
       await requirement.save();
@@ -169,7 +168,7 @@ router.get('/followup', async (req, res) => {
   });
   
   // Get all requirements
-  router.get('/requirement', async (req, res) => {
+  router.get('/requirement',verifyToken, async (req, res) => {
     try {
       const requirements = await Requirement.find();
       res.status(200).json(requirements);
@@ -179,7 +178,7 @@ router.get('/followup', async (req, res) => {
   });
   
   // Get a specific requirement by ID
-  router.get('/requirement/:id', async (req, res) => {
+  router.get('/requirement/:id', verifyToken,async (req, res) => {
     try {
       const requirement = await Requirement.findById(req.params.id);
       if (!requirement) return res.status(404).json({ message: 'Requirement not found' });
@@ -190,7 +189,7 @@ router.get('/followup', async (req, res) => {
   });
   
   // Update a requirement
-  router.put('/requirement/:id', async (req, res) => {
+  router.put('/requirement/:id', verifyToken,async (req, res) => {
     try {
       const updatedRequirement = await Requirement.findByIdAndUpdate(req.params.id, req.body, { new: true });
       if (!updatedRequirement) return res.status(404).json({ message: 'Requirement not found' });
@@ -201,7 +200,7 @@ router.get('/followup', async (req, res) => {
   });
   
   // Delete a requirement
-  router.delete('/requirement/:id', async (req, res) => {
+  router.delete('/requirement/:id',verifyToken, async (req, res) => {
     try {
       const requirement = await Requirement.findByIdAndDelete(req.params.id);
       if (!requirement) return res.status(404).json({ message: 'Requirement not found' });

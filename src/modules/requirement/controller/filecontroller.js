@@ -1,54 +1,82 @@
 const { Filter } = require("../model/model");
-
+const verifyToken=require("../../../middleware/authmiddleware")
 // Create a new filter
 const createFilter = async (req, res) => {
   try {
-    const { title, value, modules } = req.body;
+    const { title, value } = req.body;
 
-    let data = {
-        value: value
-    }
     const savedFilter = await Filter.findOneAndUpdate(
-        {title: title},
-        {
-            $push: {
-                data: data
-            }
+      { title: title },
+      {
+        $push: {
+          data: { $each: value },
         },
-        {new: true, upsert: true}
+      },
+      { new: true, upsert: true }
     );
-    res.status(201).json({ message: "Filter created successfully", filter: savedFilter });
+    res
+      .status(201)
+      .json({ message: "Filter created successfully", filter: savedFilter });
   } catch (error) {
-    res.status(500).json({ message: "Error creating filter", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error creating filter", error: error.message });
+  }
+};
+
+const addModules = async (req, res) => {
+  try {
+    const { id, modules, dataId } = req.body;
+
+    // Find and update the specific value in the data array
+    const updatedFilter = await Filter.findOneAndUpdate(
+      { _id: id, "data._id": dataId },
+      { $push: { "data.$.modules": { $each: modules } } },
+      { new: true }
+    );
+
+    res
+      .status(200)
+      .json({ message: "Filter updated successfully", filter: updatedFilter });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error updating filter", error: error.message });
   }
 };
 
 // Get all filters
 const getAllFilters = async (req, res) => {
   try {
-    const filters = await Filter.find()
+    const filters = await Filter.find();
     res.status(200).json(filters);
   } catch (error) {
-    res.status(500).json({ message: "Error fetching filters", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error fetching filters", error: error.message });
   }
 };
 
 // Get a filter by ID
 const getFilterById = async (req, res) => {
   try {
-    const filter = await Filter.findOne({$or: [{title: req.query.title}, {_id: req.query.id}]});
+    const filter = await Filter.findOne({
+      $or: [{ title: req.query.title }, { _id: req.query.id }],
+    });
     if (!filter) {
       return res.status(404).json({ message: "Filter not found" });
     }
     res.status(200).json(filter);
   } catch (error) {
-    res.status(500).json({ message: "Error fetching filter", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error fetching filter", error: error.message });
   }
 };
 
 // Update a filter by ID
 const updateFilter = async (req, res) => {
-  try {    
+  try {
     const { title, value, dataId } = req.body;
 
     // Find and update the specific value in the data array
@@ -57,17 +85,20 @@ const updateFilter = async (req, res) => {
       { $set: { "data.$.value": value } },
       { new: true }
     );
-    
-    res.status(200).json({ message: "Filter updated successfully", filter: updatedFilter });
+
+    res
+      .status(200)
+      .json({ message: "Filter updated successfully", filter: updatedFilter });
   } catch (error) {
-    res.status(500).json({ message: "Error updating filter", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error updating filter", error: error.message });
   }
 };
 
 // Delete a filter by ID
 const deleteFilter = async (req, res) => {
   try {
-
     const { title, dataId } = req.body;
 
     // Find and remove the specific item from the data array
@@ -80,10 +111,14 @@ const deleteFilter = async (req, res) => {
       return res.status(404).json({ message: "Filter or data item not found" });
     }
 
-    res.status(200).json({ message: "Data item deleted successfully", filter: updatedFilter });
-  }
-   catch (error) {
-    res.status(500).json({ message: "Error deleting filter", error: error.message });
+    res.status(200).json({
+      message: "Data item deleted successfully",
+      filter: updatedFilter,
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error deleting filter", error: error.message });
   }
 };
 
@@ -93,4 +128,5 @@ module.exports = {
   getFilterById,
   updateFilter,
   deleteFilter,
+  addModules,
 };

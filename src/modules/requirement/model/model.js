@@ -5,7 +5,7 @@ const requirementschema=new mongoose.Schema({
     title:{
         type: String,
         required:true,
-        enum:['Blocking Reason','Api','Customer Flag','Application','Technology','Server','Support',],
+        enum:['Blocking Reason','Api','Customer Flag','Application','Technology','Server','Support','leadSource'],
         unique:true,
     },
     data:[{

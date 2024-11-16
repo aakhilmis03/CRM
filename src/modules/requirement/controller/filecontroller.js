@@ -17,36 +17,11 @@ const createFilter = async (req, res) => {
       },
       { new: true, upsert: true }
     );
-    res
-      .status(201)
-      .json({ message: "Filter created successfully", filter: savedFilter });
+    res.status(201).json({ message: "Filter created successfully", filter: savedFilter });
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Error creating filter", error: error.message });
+    res.status(500).json({ message: "Error creating filter", error: error.message });
   }
 };
-
-// const addModules = async (req, res) => {
-//   try {
-//     const { id, modules, dataId } = req.body;
-
-//     // Find and update the specific value in the data array
-//     const updatedFilter = await Filter.findOneAndUpdate(
-//       { _id: id, "data._id": dataId },
-//       { $push: { "data.$.modules": { $each: modules } } },
-//       { new: true }
-//     );
-
-//     res
-//       .status(200)
-//       .json({ message: "Filter updated successfully", filter: updatedFilter });
-//   } catch (error) {
-//     res
-//       .status(500)
-//       .json({ message: "Error updating filter", error: error.message });
-//   }
-// };
 
 const addModules = async (req, res) => {
   try {
@@ -85,25 +60,34 @@ const addModules = async (req, res) => {
 
 const getModules = async (req, res) => {
   try {
-    const { id, dataId } = req.query;
+    // Log the entire query object to see what is received
+    console.log("Received Query Params:", req.body);
+
+
+    const { id, dataId } = req.body;
     console.log("Received ID:", id);
-    console.log("Received Data ID:", dataId);
+console.log("Received Data ID:", dataId);
+
+    // Validate the ObjectId
+  if (!id || !mongoose.Types.ObjectId.isValid(id) || id.length !== 24) {
+      return res.status(400).json({ message: "Invalid Filter ID" });
+    }
+    if (!dataId || !mongoose.Types.ObjectId.isValid(dataId) || dataId.length !== 24) {
+      return res.status(400).json({ message: "Invalid Data ID" });
+    }
 
     // Convert `id` and `dataId` to ObjectId
     const objectId = new mongoose.Types.ObjectId(id);
-    console.log("Converted ObjectId:", objectId);
+    const dataObjectId = new mongoose.Types.ObjectId(dataId);
+
+    console.log("Searching for filter with ID:", objectId);
 
     const filter = await Filter.findOne({ _id: objectId });
-    console.log("Filter Found:", filter);
-
     if (!filter) {
       return res.status(404).json({ message: "Filter not found" });
     }
 
-    const dataObjectId = new mongoose.Types.ObjectId(dataId);
     const dataItem = filter.data.find((item) => item._id.equals(dataObjectId));
-    console.log("Data Item Found:", dataItem);
-
     if (!dataItem) {
       return res.status(404).json({ message: "Data item not found" });
     }
@@ -111,9 +95,7 @@ const getModules = async (req, res) => {
     res.status(200).json({ modules: dataItem.modules });
   } catch (error) {
     console.error("Error:", error.message);
-    res
-      .status(500)
-      .json({ message: "Error fetching modules", error: error.message });
+    res.status(500).json({ message: "Error fetching modules", error: error.message });
   }
 };
 

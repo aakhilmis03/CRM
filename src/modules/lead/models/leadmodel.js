@@ -4,12 +4,12 @@ const leadDetailSchema = new mongoose.Schema({
     leadSource: {
         type: String,
         required: true,
-        enum: ['just-dial', 'email', 'fiverr', 'Social Media', 'Email', 'upwork','events '],
+        // enum: ['just-dial', 'email', 'fiverr', 'Social Media', 'Email', 'upwork','events '],
       },
       salesType: {
         type: String,
         required: true,
-        enum: ['NewSale', 'Renewal', 'up-sell'],
+        // enum: ['NewSale', 'Renewal', 'up-sell'],
       },
       skype: {
         type: String,
@@ -17,27 +17,27 @@ const leadDetailSchema = new mongoose.Schema({
       leadIndustry: {
         type: String,
         required: true,
-        enum: ['Real Estate',
-            'Ecommerce & Retail'
-            ,'Manufacturing'
-            ,'Jobs & Platform',
-            'Education & Learning'
-            ,'Fintech',
-            'Travel & Hospitality',
-            'Gaming'
-            ,'IT Infra',
-            'Marketplace'
-            ,'Custom CRM'],
+        // enum: ['Real Estate',
+        //     'Ecommerce & Retail'
+        //     ,'Manufacturing'
+        //     ,'Jobs & Platform',
+        //     'Education & Learning'
+        //     ,'Fintech',
+        //     'Travel & Hospitality',
+        //     'Gaming'
+        //     ,'IT Infra',
+        //     'Marketplace'
+        //     ,'Custom CRM'],
       },
       leadCompanyType: {
         type: String,
         required: true,
-        enum: ['Startup', 'Individual', 'Enterprise', 'Govt','Coorporate','MNC'],
+        // enum: ['Startup', 'Individual', 'Enterprise', 'Govt','Coorporate','MNC'],
       },
       leadFrom: {
         type: String,
         required: true,
-        enum: ['India Buisness', 'Overseas Buisness'],
+        // enum: ['India Buisness', 'Overseas Buisness'],
       },
       createdAt: {
         type: Date,
@@ -85,31 +85,31 @@ const FollowupSchema= new mongoose.Schema({
   leadstatus:{
     type:String,
     required:true,
-    enum: ['New Lead','Follow up', 'Meeting & Demo','Costing & Proposal ','Projection','Wins as Project','No Response & lost','Junk Lead', 'Converted'],
+    // enum: ['New Lead','Follow up', 'Meeting & Demo','Costing & Proposal ','Projection','Wins as Project','No Response & lost','Junk Lead', 'Converted'],
   },
   priority: {
     type: String,
     required: true,
-    enum: ['Low', 'Medium', 'High'],
+    // enum: ['Low', 'Medium', 'High'],
   },
   leadType: {
     type: String,
     required: true,
-    enum: ['Casual Lead', 'Hot Lead', 'Cold Lead', 'Warm Lead'],
+    // enum: ['Casual Lead', 'Hot Lead', 'Cold Lead', 'Warm Lead'],
   },
   analysisStage: {
     type: String,
     required: true,
-    enum: ['Requirement Analysis', 'Initial Discussion', 'Proposal Sent', 'Negotiation'],
+    // enum: ['Requirement Analysis', 'Initial Discussion', 'Proposal Sent', 'Negotiation'],
   },
   blockingReason: {
     type: String,
-    enum: [
-      'Low Budget','Technical Issues','Internal Approval','Competitor Quotes','No Response','Other'],
+    // enum: [
+    //   'Low Budget','Technical Issues','Internal Approval','Competitor Quotes','No Response','Other'],
   },
   customerFlag: {
     type: String,
-    enum: ['Genuine Client', 'Fraud', 'Tech Company', 'Freelancer', 'Potential Partner'],
+    // enum: ['Genuine Client', 'Fraud', 'Tech Company', 'Freelancer', 'Potential Partner'],
   },
 })
 
@@ -183,7 +183,7 @@ const requirementSchema = new mongoose.Schema({
     type: String,
     default: '',
   },
-  // clientbudget:{
+ // clientbudget:{
   //   type:Number,
   //   required:true,
   // },
@@ -196,7 +196,7 @@ const requirementSchema = new mongoose.Schema({
   // },
   // AssignedTo:{
   //   type:String,
-  // }
+  // } 
 }, {
   timestamps: true,
 });

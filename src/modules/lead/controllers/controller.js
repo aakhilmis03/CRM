@@ -27,7 +27,7 @@ const getAllDataController = async (req, res) => {
 };
 
 // GET: Get individual data by ID
-const getDataByIdController = async (req, res) => {
+const getDataByIdController  = async (req, res) => {
   const { id } = req.params;
   try {
     const lead = await Lead.findById(id);

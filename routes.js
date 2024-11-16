@@ -15,5 +15,9 @@ module.exports = [
   {
     path:"/api/",
     handler:leadRoutes,
-  }
+  },
+  {
+    path: "/api", // Add this line to include the business info router
+    handler: router,
+  },
 ];

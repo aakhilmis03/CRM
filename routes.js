@@ -37,8 +37,8 @@ module.exports = [
     path:"/api/category",
     handler:addtaskcategory
   },
-  // {
-  //   path:"/api/subcategory",
-  //   path:subCategory
-  // }
+  {
+    path:"/api/subcategories",
+    handler:subCategory
+  }
 ];

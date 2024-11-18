@@ -24,20 +24,20 @@ const taskCategoryService= require("../../category/buisness/category.buisness");
 
 exports.addSubCategory = async (req, res) => {
   try {
-    const { taskName, subCategoryName, status } = req.body; // Change to taskName
+    const { taskCategoryId, subCategoryName, status } = req.body; // Change to taskName
 
-    if (!taskName || !subCategoryName) {
+    if (!taskCategoryId || !subCategoryName) {
       return res.status(400).json({ success: false, message: "Missing required fields" });
     }
 
     // Get taskCategoryId based on taskName
-    const taskCategory = await taskCategoryService.getTaskCategoryByName(taskName); // New function to get category by name
-    if (!taskCategory) {
-      return res.status(404).json({ success: false, message: "Task category not found" });
-    }
+    // const taskCategory = await taskCategoryService.getTaskCategoryByName(taskName); // New function to get category by name
+    // if (!taskCategory) {
+    //   return res.status(404).json({ success: false, message: "Task category not found" });
+    // }
 
     const newSubCategory = await taskSubCategoryService.createSubCategory(
-      taskCategory._id, // Use the found taskCategoryId
+      taskCategoryId, // Use the found taskCategoryId
       subCategoryName,
       status
     );

@@ -4,7 +4,8 @@ const router= require("./src/modules/buisness_info/routes/router");
 const filterRouter=require("./src/modules/requirement/router/filterRouter");
 const leadRoutes = require("./src/modules/lead/routes/router");
 const requirement = require("./src/modules/requirement/router/filterRouter");
-const leadsearch = require("./src/modules/allSaleslead/routes/allsaleslead");
+const leadsearch = require("./src/modules/allSaleslead/routes/allsalesleadroute");
+const addtaskcategory = require("./src/modules/task/category/routes/category.route")
 module.exports = [
   {
     path: "/api/staff",
@@ -29,5 +30,9 @@ module.exports = [
   {
     path:"/api",
     handler:leadsearch
+  },
+  {
+    path:"/api/category",
+    handler:addtaskcategory
   }
 ];

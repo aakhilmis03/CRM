@@ -9,7 +9,7 @@ exports.searchLeads = async (req, res) => {
       source,
       addedBy,
       leadStatus,
-      saleCompanyType,
+      leadCompanyType,
       leadFrom,
       country,
       startDate,
@@ -22,22 +22,30 @@ exports.searchLeads = async (req, res) => {
     const filter = {};
 
     if (salesType) filter.salesType = salesType;
-
-    // if (source) query.source = { $regex: source, $options: 'i' };
-    // if (addedBy) query.addedBy = { $regex: addedBy, $options: 'i' };
-    // if (leadStatus) query.leadStatus = { $regex: leadStatus, $options: 'i' };
-    // if (saleCompanyType) query.saleCompanyType = { $regex: saleCompanyType, $options: 'i' };
-    // if (leadFrom) query.leadFrom = { $regex: leadFrom, $options: 'i' };
-    // if (country) query.country = { $regex: country, $options: 'i' };
-    // if (requirement) query.requirement = { $regex: requirement, $options: 'i' };
+    if (leadStatus) filter.leadStatus= leadStatus;
+    if (source) filter.source = source;
+    if (addedBy) filter.addedBy = addedBy
+    if (leadStatus) filter.leadStatus = leadStatus
+    if (leadCompanyType) filter.leadCompanyType = leadCompanyType
+    if (leadFrom) filter.leadFrom = leadFrom
+    if (country) filter.country = country
+    if (requirement) filter.requirement = requirement
 
     // Date range filter
-    // if (startDate && endDate) {
-    //   query.date = {
-    //     $gte: new Date(startDate),
-    //     $lte: new Date(endDate),
-    //   };
-    // }
+    if (startDate && endDate) {
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+      console.log("Start Date (Converted):", start, "End Date (Converted):", end);
+    
+      filter.createdAt = {
+        $gte: start,
+        $lte: end,
+      };
+    }
+    filter.createdAt = {
+      $gte: new Date("2024-10-18"),
+      $lte: new Date("2024-11-12"),
+    };
 
     let data = {
       $replaceRoot: {

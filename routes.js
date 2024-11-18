@@ -4,6 +4,7 @@ const router= require("./src/modules/buisness_info/routes/router");
 const filterRouter=require("./src/modules/requirement/router/filterRouter");
 const leadRoutes = require("./src/modules/lead/routes/router");
 const requirement = require("./src/modules/requirement/router/filterRouter");
+const leadsearch = require("./src/modules/allSaleslead/routes/allsaleslead");
 module.exports = [
   {
     path: "/api/staff",
@@ -24,5 +25,9 @@ module.exports = [
   {
     path:"/api",
     handler:requirement
+  },
+  {
+    path:"/api",
+    handler:leadsearch
   }
 ];

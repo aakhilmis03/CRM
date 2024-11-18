@@ -25,4 +25,6 @@ const taskCategorySchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("TaskCategory", taskCategorySchema);
+// module.exports = mongoose.model("TaskCategory", taskCategorySchema);
+const TaskCategory = mongoose.model("TaskCategory", taskCategorySchema);
+module.exports = TaskCategory;

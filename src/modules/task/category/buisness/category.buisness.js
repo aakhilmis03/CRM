@@ -27,3 +27,8 @@ exports.deleteTaskCategoryById = async (id) => {
   await TaskCategory.findByIdAndDelete(id);
   return { message: "Task Category deleted successfully" };
 };
+
+
+exports.getTaskCategoryByName = async (taskName) => {
+  return await TaskCategory.findOne({ taskName }); // Find the task category by name
+};

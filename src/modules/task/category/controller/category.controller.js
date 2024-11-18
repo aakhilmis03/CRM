@@ -37,13 +37,15 @@ exports.updateTaskCategory = async (req, res) => {
 };
 
 // Delete Task Category
-exports.deleteTaskCategory = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const result = await taskCategoryService.deleteTaskCategoryById(id);
-    res.status(200).json({ success: true, message: result.message });
-  } catch (error) {
-    console.error("Error in deleteTaskCategory:", error);
-    res.status(500).json({ success: false, message: "Internal Server Error" });
-  }
-};
+// exports.deleteTaskCategory = async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     const result = await taskCategoryService.deleteTaskCategoryById(id);
+//     res.status(200).json({ success: true, message: result.message });
+//   } catch (error) {
+//     console.error("Error in deleteTaskCategory:", error);
+//     res.status(500).json({ success: false, message: "Internal Server Error" });
+//   }
+// };
+
+exports.deleteTaskCategory = async (req, res) => await taskCategoryService.deleteTaskCategory(req, res);

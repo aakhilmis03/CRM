@@ -183,20 +183,20 @@ const requirementSchema = new mongoose.Schema({
     type: String,
     default: '',
   },
- // clientbudget:{
-  //   type:Number,
-  //   required:true,
-  // },
-  // OurOfferedBudget:{
-  //   type:Number,
-  //   required:true,
-  // },
+ clientbudget:{
+    type:Number,
+    required:true,
+  },
+  OurOfferedBudget:{
+    type:Number,
+    required:true,
+  },
   // Attachments:{
 
   // },
-  // AssignedTo:{
-  //   type:String,
-  // } 
+  AssignedTo:{
+    type:String,
+  } 
 }, {
   timestamps: true,
 });

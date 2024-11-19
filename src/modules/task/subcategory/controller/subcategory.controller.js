@@ -1,26 +1,10 @@
 const taskSubCategoryService = require("../buisness/subcategory.buisness");
 const taskCategoryService= require("../../category/buisness/category.buisness");
-// Add a Subtask Category
-// exports.addSubCategory = async (req, res) => {
-//   try {
-//     const { taskCategoryId, subCategoryName, status } = req.body;
 
-//     if (!taskCategoryId || !subCategoryName) {
-//       return res.status(400).json({ success: false, message: "Missing required fields" });
-//     }
 
-//     const newSubCategory = await taskSubCategoryService.createSubCategory(
-//       taskCategoryId,
-//       subCategoryName,
-//       status
-//     );
 
-//     res.status(201).json({ success: true, data: newSubCategory });
-//   } catch (error) {
-//     console.error("Error in addSubCategory:", error.message);
-//     res.status(500).json({ success: false, message: "Internal Server Error" });
-//   }
-// };
+const TaskSubCategory = require("../model/subcategory.model");
+const {isValid} = require("../../../../middleware/validator")
 
 exports.addSubCategory = async (req, res) => {
   try {
@@ -29,12 +13,6 @@ exports.addSubCategory = async (req, res) => {
     if (!taskCategoryId || !subCategoryName) {
       return res.status(400).json({ success: false, message: "Missing required fields" });
     }
-
-    // Get taskCategoryId based on taskName
-    // const taskCategory = await taskCategoryService.getTaskCategoryByName(taskName); // New function to get category by name
-    // if (!taskCategory) {
-    //   return res.status(404).json({ success: false, message: "Task category not found" });
-    // }
 
     const newSubCategory = await taskSubCategoryService.createSubCategory(
       taskCategoryId, // Use the found taskCategoryId
@@ -52,43 +30,19 @@ exports.addSubCategory = async (req, res) => {
 // Get Subcategories by Task Category ID
 exports.getSubCategoriesByCategory = async (req, res) => {
   try {
-    const { taskCategoryId } = req.params;
+    const { taskCategoryId } = req.query;
+let filter = {}
+    if (isValid(taskCategoryId)) filter.taskCategoryId = taskCategoryId
 
-    if (!taskCategoryId) {
-      return res.status(400).json({ success: false, message: "Task category ID is required" });
-    }
+    // If task category is found, fetch the associated subcategories
+    const subcategories = await TaskSubCategory.find(filter)
+    .populate("taskCategoryId")
+    .sort({ createdAt: -1 });
 
-    const subCategories = await taskSubCategoryService.getSubCategoriesByCategory(taskCategoryId);
-
-    res.status(200).json({ success: true, count: subCategories.length, data: subCategories });
+    res.status(200).json({ success: true, count: subcategories.length, data: subcategories });
   } catch (error) {
     console.error("Error in getSubCategoriesByCategory:", error.message);
     res.status(500).json({ success: false, message: "Internal Server Error" });
-  }
-};
-
-// Get Subcategories by Task Name
-exports.getSubCategoriesByTaskName = async (req, res) => {
-  try {
-    const { taskName } = req.body; // Get taskName from the request body
-
-    if (!taskName) {
-      return res.status(400).json({ success: false, message: "Task name is required" });
-    }
-
-    console.log("Fetching subcategories for task name:", taskName); // Log the task name
-
-    // Use the new service function to get subcategories by task name
-    const subCategories = await taskSubCategoryService.getSubCategoriesByTaskName(taskName);
-    
-    if (!subCategories || subCategories.length === 0) {
-      return res.status(404).json({ success: false, message: "No subcategories found for this task name" });
-    }
-
-    res.status(200).json({ success: true, count: subCategories.length, data: subCategories });
-  } catch (error) {
-    console.error("Error in getSubCategoriesByTaskName:", error); // Log the entire error object
-    res.status(500).json({ success: false, message: "Internal Server Error", error: error.message });
   }
 };
 
@@ -118,9 +72,13 @@ exports.updateSubCategory = async (req, res) => {
 // Delete a Subtask Category
 exports.deleteSubCategory = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { id } = req.query;
+    if (!isValid(id)) {
+      return res.status(400).json({ success: false, message: "Missing required field" });
+    }
 
-    await taskSubCategoryService.deleteSubCategory(id);
+    const deleteSubCategory = await TaskSubCategory.findByIdAndDelete(id);
+    
     res.status(200).json({ success: true, message: "Subtask Category deleted successfully" });
   } catch (error) {
     console.error("Error in deleteSubCategory:", error.message);

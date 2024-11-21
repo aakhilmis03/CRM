@@ -14,15 +14,6 @@ exports.addStaff = async (req, res) => {
     // Create new staff object
     const newStaff = new Staff(
       req.body
-    //   {
-    //   staffId,
-    //   name,
-    //   email,
-    //   phoneNumber,
-    //   designation,
-    //   password: hashedPassword,
-    //   role
-    // }
   );
 
     // Save to database
@@ -60,5 +51,17 @@ exports.loginStaff = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Error logging in' });
+  }
+};
+
+// Get all staff
+
+exports.getAllStaff = async (req, res) => {
+  try {
+    const staff = await Staff.find();
+    res.status(200).json(staff);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error fetching staff' });
   }
 };

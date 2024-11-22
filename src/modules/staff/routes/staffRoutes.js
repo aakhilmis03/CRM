@@ -6,4 +6,6 @@ const staffController = require('../controllers/staffController');
 router.post('/add', staffController.addStaff);  // Admin adds staff
 router.post('/login', staffController.loginStaff);  // Staff login
 router.get('/allstaff', staffController.getAllStaff); // All staff
+router.get('/staffProfile', staffController.getStaffProfile); //staff profile
+router.put('/updateProfile', staffController.updateStaffProfile) // Update staff
 module.exports = router;

@@ -65,3 +65,62 @@ exports.getAllStaff = async (req, res) => {
     res.status(500).json({ message: 'Error fetching staff' });
   }
 };
+
+
+// get the particular staff 
+exports.getStaffProfile = async (req, res) => {
+  try {
+    const { staffId } = req.body;  // staffId will be passed as a URL parameter
+
+    // Find the staff by staffId
+    const staff = await Staff.findOne({ staffId: staffId });
+
+    if (!staff) {
+      return res.status(404).json({ message: 'Staff not found' });
+    }
+
+    res.status(200).json({ staff });
+  } catch (error) {
+    console.error("Error occurred while fetching staff profile:", error);
+    res.status(500).json({ message: 'Error fetching staff profile', error: error.message });
+  }
+};
+
+
+
+// Update staff profile (only the fields provided in the request)
+exports.updateStaffProfile = async (req, res) => {
+  try {
+    // Extract the fields that might be updated from the request body
+    const { staffId, name, email, phoneNumber, designation, role, password } = req.body;
+
+    // Create an object to hold the fields that will be updated
+    const updatedData = {};
+
+    // Only add the fields that are provided
+    if (name) updatedData.name = name;
+    if (email) updatedData.email = email;
+    if (phoneNumber) updatedData.phoneNumber = phoneNumber;
+    if (designation) updatedData.designation = designation;
+    if (role) updatedData.role = role;
+    
+    // If password is provided, hash it before updating
+    if (password) {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      updatedData.password = hashedPassword;
+    }
+
+    // Update the staff in the database using staffId
+    const staff = await Staff.findOneAndUpdate({ staffId: staffId }, updatedData, { new: true });
+
+
+    if (!staff) {
+      return res.status(404).json({ message: 'Staff not found' });
+    }
+
+    res.status(200).json({ message: 'Staff profile updated successfully', staff });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error updating staff profile' });
+  }
+};

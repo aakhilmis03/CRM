@@ -5,7 +5,8 @@ const verifyToken = require("../../../../middleware/authmiddleware"); // Protect
 
 // Add a task
 router.post("/add", verifyToken, taskController.addTask);
-router.get("/", verifyToken, taskController.getTasks);
+router.get("/get", verifyToken, taskController.getTasks);
+router.put("/updateStatus", verifyToken, taskController.updateTaskStatus);
 router.delete("/delete", verifyToken, taskController.deleteTasks);
 
 module.exports = router;

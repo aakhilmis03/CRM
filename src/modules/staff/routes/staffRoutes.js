@@ -8,4 +8,6 @@ router.post('/login', staffController.loginStaff);  // Staff login
 router.get('/allstaff', staffController.getAllStaff); // All staff
 router.get('/staffProfile', staffController.getStaffProfile); //staff profile
 router.put('/updateProfile', staffController.updateStaffProfile) // Update staff
+router.delete('/delete/', staffController.deleteStaff); // Delete staff
+
 module.exports = router;

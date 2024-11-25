@@ -7,7 +7,7 @@ const leadsearch = require("./src/modules/allSaleslead/routes/allsalesleadroute"
 const addtaskcategory = require("./src/modules/task/category/routes/category.route")
 const subCategory= require("./src/modules/task/subcategory/routes/subcategory.route");
 const manageTaskRoutes = require("./src/modules/task/manageTask/routes/manageTask.router");
-
+const metricsRoutes = require("./src/modules/metrics/routes/metrics.route")
 
 module.exports = [
   {
@@ -45,5 +45,9 @@ module.exports = [
   {
     path:"/api/manageTask",
     handler:manageTaskRoutes
-  }
+  },
+  {
+    path: "/api/metrics",
+    handler: metricsRoutes,
+  },
 ];

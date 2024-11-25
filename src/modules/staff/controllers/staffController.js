@@ -7,14 +7,25 @@ exports.addStaff = async (req, res) => {
   try {
     const { staffId, name, email, phoneNumber, designation, password,role } = req.body;
 
+     // Check if the staff already exists by email or staffId
+     const existingStaff = await Staff.findOne({ $or: [{ email }, { staffId }] });
+     if (existingStaff) {
+       return res.status(400).json({ message: 'Staff already exists' });
+     }
+
     // Hash the password before saving
     const hashedPassword = await bcrypt.hash(password, 10);
     req.body.password=hashedPassword;
 
-    // Create new staff object
-    const newStaff = new Staff(
-      req.body
-  );
+    const newStaff = new Staff({
+      staffId: staffId || '', // Default to empty string if not provided
+      name,
+      email,
+      phoneNumber: phoneNumber || '', // Default to empty string if not provided
+      designation: designation || '', // Default to empty string if not provided
+      password: req.body.password,
+      role: role || 'sales', // Default to 'sales' if not provided
+    });
 
     // Save to database
     await newStaff.save();
@@ -122,5 +133,24 @@ exports.updateStaffProfile = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Error updating staff profile' });
+  }
+};
+
+// Delete staff
+exports.deleteStaff = async (req, res) => {
+  const { staffId } = req.body; // Get staffId from URL parameters
+
+  try {
+    // Find and delete the staff member by staffId
+    const deletedStaff = await Staff.findOneAndDelete({ staffId });
+
+    if (!deletedStaff) {
+      return res.status(404).json({ message: 'Staff not found' });
+    }
+
+    res.status(200).json({ message: 'Staff deleted successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error deleting staff' });
   }
 };

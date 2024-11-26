@@ -5,9 +5,9 @@ const verifyToken = require("../../../../middleware/authmiddleware");
 const taskCategoryController = require("../controller/category.controller");
 
 // Routes
-router.post("/add", verifyToken, taskCategoryController.addTaskCategory);
-router.get("/", verifyToken, taskCategoryController.getTaskCategories);
-router.put("/:id", verifyToken, taskCategoryController.updateTaskCategory);
-router.delete("/:id", verifyToken, taskCategoryController.deleteTaskCategory);
+router.post("/add", taskCategoryController.addTaskCategory);
+router.get("/", taskCategoryController.getTaskCategories);
+router.put("/:id", taskCategoryController.updateTaskCategory);
+router.delete("/:id", taskCategoryController.deleteTaskCategory);
 
 module.exports = router;

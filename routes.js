@@ -8,7 +8,7 @@ const addtaskcategory = require("./src/modules/task/category/routes/category.rou
 const subCategory= require("./src/modules/task/subcategory/routes/subcategory.route");
 const manageTaskRoutes = require("./src/modules/task/manageTask/routes/manageTask.router");
 const metricsRoutes = require("./src/modules/metrics/routes/metrics.route")
-
+const leadDetailsRoutes = require("./src/modules/userContact/routes/leadDetailsRoutes");
 module.exports = [
   {
     path: "/api/staff",
@@ -50,4 +50,8 @@ module.exports = [
     path: "/api/metrics",
     handler: metricsRoutes,
   },
+  {
+    path:"/api/client",
+    handler: leadDetailsRoutes,
+  }
 ];

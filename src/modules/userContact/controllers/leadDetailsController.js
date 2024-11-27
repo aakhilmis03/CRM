@@ -13,6 +13,11 @@ exports.getLeadDetailsByName = async (req, res) => {
             return res.status(404).json({ message: "Lead not found" });
         }
 
+        const createdAt = lead.leadDetails.createdAt;
+        const currentDate = new Date();
+        const timeDifference = currentDate - createdAt; // Difference in milliseconds
+        const daysSinceCreated = Math.floor(timeDifference / (1000 * 60 * 60 * 24)); // Convert to days
+
         // Structure the data into blocks
         const responseData = {
                 contactDetail: {
@@ -42,6 +47,7 @@ exports.getLeadDetailsByName = async (req, res) => {
             },
             blockingReason: lead.followup.blockingReason,
             customerFlag: lead.followup.customerFlag,
+            daysSinceCreated: daysSinceCreated, // Add the number of days since created
             // Add more blocks as necessary
         };
 

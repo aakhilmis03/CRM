@@ -9,6 +9,9 @@ const subCategory= require("./src/modules/task/subcategory/routes/subcategory.ro
 const manageTaskRoutes = require("./src/modules/task/manageTask/routes/manageTask.router");
 const metricsRoutes = require("./src/modules/metrics/routes/metrics.route")
 const leadDetailsRoutes = require("./src/modules/userContact/routes/leadDetailsRoutes");
+const callbackmeeting=require("./src/modules/call/callback/routes/callback.routes");
+const meetingRoutes = require("./src/modules/call/meeting/routes/meeting.route");
+
 module.exports = [
   {
     path: "/api/staff",
@@ -53,5 +56,13 @@ module.exports = [
   {
     path:"/api/client",
     handler: leadDetailsRoutes,
-  }
+  },
+  {
+    path:"/api/callback",
+    handler: callbackmeeting 
+  },
+  {
+    path: "/api/calls/meeting",
+    handler: meetingRoutes,
+},
 ];

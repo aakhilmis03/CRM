@@ -20,9 +20,7 @@ mongoose.set('debug', true)
 
 routes.map(route => {
   app.use(route.path, route.handler);
-})
-// app.use(express.json());
-// app.use('/api/subcategories', subcategoryRoutes);
+}) 
 // Server start
 const PORT = process.env.PORT ||5000;
 app.listen(PORT, () => {

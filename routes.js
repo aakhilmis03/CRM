@@ -11,6 +11,7 @@ const metricsRoutes = require("./src/modules/metrics/routes/metrics.route")
 const leadDetailsRoutes = require("./src/modules/userContact/routes/leadDetailsRoutes");
 const callbackmeeting=require("./src/modules/call/callback/routes/callback.routes");
 const meetingRoutes = require("./src/modules/call/meeting/routes/meeting.route");
+const postUpdateRoutes=require("./src/modules/call/post&update/routes/post.update.route")
 
 module.exports = [
   {
@@ -64,5 +65,9 @@ module.exports = [
   {
     path: "/api/calls/meeting",
     handler: meetingRoutes,
-},
+  },
+  {
+    path:"/api/postUpdate",
+    handler: postUpdateRoutes,
+  }
 ];

@@ -12,9 +12,9 @@ const leadDetailsRoutes = require("./src/modules/userContact/routes/leadDetailsR
 const callbackmeeting=require("./src/modules/call/callback/routes/callback.routes");
 const meetingRoutes = require("./src/modules/call/meeting/routes/meeting.route");
 const postUpdateRoutes=require("./src/modules/call/post&update/routes/post.update.route")
-
+const quotationRoutes=require("./src/modules/call/quotation/routes/quotation.route")
 module.exports = [
-  {
+{                           
     path: "/api/staff",
     handler: staffRoutes,
   },
@@ -69,5 +69,9 @@ module.exports = [
   {
     path:"/api/postUpdate",
     handler: postUpdateRoutes,
+  },
+  {
+    path:"/api/quotaion",
+    handler: quotationRoutes,
   }
 ];

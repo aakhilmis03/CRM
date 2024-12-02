@@ -3,22 +3,28 @@ const jwt = require('jsonwebtoken');
 const Staff = require('../models/staffModel');
 
 // Admin adds a new staff
+
 exports.addStaff = async (req, res) => {
   try {
-    const { staffId, name, email, phoneNumber, designation, password,role } = req.body;
+    const { staffId, name, email, phoneNumber, designation, password, role } = req.body;
 
-     // Check if the staff already exists by email or staffId
-     const existingStaff = await Staff.findOne({ $or: [{ email }, { staffId }] });
-     if (existingStaff) {
-       return res.status(400).json({ message: 'Staff already exists' });
-     }
+    // Validate that staffId is not empty
+    if (!staffId || staffId.trim() === "") {
+      return res.status(400).json({ message: 'Staff ID is required. Please provide a valid Staff ID.' });
+    }
+    
+    // Check if the staff already exists by email or staffId
+    const existingStaff = await Staff.findOne({ $or: [{ email }, { staffId }] });
+    if (existingStaff) {
+      return res.status(400).json({ message: 'Staff already exists' });
+    }
 
     // Hash the password before saving
     const hashedPassword = await bcrypt.hash(password, 10);
-    req.body.password=hashedPassword;
-
+    req.body.password = hashedPassword;
+    
     const newStaff = new Staff({
-      staffId: staffId || '', // Default to empty string if not provided
+      staffId: staffId, // staffId provided by user
       name,
       email,
       phoneNumber: phoneNumber || '', // Default to empty string if not provided

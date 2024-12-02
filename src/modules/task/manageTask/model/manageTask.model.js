@@ -6,6 +6,10 @@ const taskSchema = new mongoose.Schema(
         type: String,
         required: true,
       },
+      id: {
+        type: String,
+        // required: true,
+      },
       category: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "TaskCategory",
@@ -54,5 +58,31 @@ const taskSchema = new mongoose.Schema(
     },
     { timestamps: true }
   );
+
+  taskSchema.pre("save", async function (next) {
+    const user = this;
+  
+      try {
+        const lastStudent = await mongoose
+          .model("ManageTask")
+          .findOne()
+          .sort({ createdAt: -1 });
+  
+        let newId = "WT0001";
+  
+        if (lastStudent && lastStudent.id) {
+          const lastIdNum = parseInt(lastStudent.id.replace("WT", ""));
+          const nextIdNum = lastIdNum + 1;
+  
+          newId = `WT${nextIdNum.toString().padStart(4, "0")}`;
+        }
+  
+        user.id = newId;
+        next();
+      } catch (err) {
+        next(err);
+      }
+  });
+
   const Task = mongoose.model("ManageTask", taskSchema);
   module.exports = Task;

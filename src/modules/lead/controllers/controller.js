@@ -26,18 +26,21 @@ const getAllDataController = async (req, res) => {
   }
 };
 
-// GET: Get individual data by ID
+// GET: Get individual data lead status
 const getDataByIdController  = async (req, res) => {
-  const { id } = req.params;
+  const {  leadstatus } = req.params;
   try {
-    const lead = await Lead.findById(id);
 
-    if (!lead) {
+    if (!leadstatus) {
       return res.status(404).json({ message: "Data not found" });
+    }
+    const leads = await Lead.find({ "followup.leadstatus" : leadstatus });
+    if (leads.length === 0) {
+      return res.status(404).json({ message: `No leads found with status: ${leadstatus}` });
     }
 
     res.status(200).json({
-      lead,
+      data:leads,
     });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });

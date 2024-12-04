@@ -7,6 +7,10 @@ const verifyToken = require("../../../middleware/authmiddleware");
 const createFilter = async (req, res) => {
   try {
     const { title, value } = req.body;
+    
+    if (!Array.isArray(value)) {
+      return res.status(400).json({ message: "Value must be an array" });
+    }
 
     const savedFilter = await Filter.findOneAndUpdate(
       { title: title },
@@ -103,11 +107,10 @@ console.log("Received Data ID:", dataId);
 const getAllFilters = async (req, res) => {
   try {
     const filters = await Filter.find();
+    console.log('Fetched filers:',filters );
     res.status(200).json(filters);
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Error fetching filters", error: error.message });
+    res.status(500).json({ message: "Error fetching filters", error: error.message });
   }
 };
 

@@ -6,17 +6,18 @@ const {
   getAllDataController,
   getDataByIdController,
   updateDataController,
-  deleteDataController
+  deleteDataController,
+  searchLeadsController
 } = require("../controllers/controller");
 
 // POST: Add data for all schemas
 router.post("/adddata", verifyToken, addDataController);
 
-// GET: Get all data for all schemas
-router.get("/adddata", verifyToken, getAllDataController);
-
-// GET: Get individual data by ID
+// GET: Get individual data by lead status
 router.get("/leadstatus/:leadstatus", verifyToken, getDataByIdController);
+
+//get all the data & the search bar 
+router.get("/search/", verifyToken, searchLeadsController);
 
 // PUT: Update data by ID
 router.put("/adddata/:id", verifyToken, updateDataController);

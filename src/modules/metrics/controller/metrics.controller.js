@@ -61,3 +61,54 @@ exports.countAllSalesLeadsByStatus = async (req, res) => {
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
+
+exports.todayactivity = async (req, res) => {
+  try {
+    // Extract query parameters from the request
+    const query = req.query;
+    
+    // Initialize the search filters object
+    let searchFilters = {};
+
+    // Get today's date and convert to the start of the day (00:00:00) and end of the day (23:59:59)
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0); // set to 00:00:00
+    const endOfDay = new Date();
+    endOfDay.setHours(23, 59, 59, 999); // set to 23:59:59
+
+    // Add filter to match createdAt with today's date
+    searchFilters.createdAt = { $gte: startOfDay, $lte: endOfDay };
+
+    // If 'searchbox' is provided, apply the search filter to specific fields
+    if (query.searchbox) {
+      const searchText = query.searchbox.trim();
+
+      let contactFilter = {};
+
+      // Add filters for email, contactName, companyMobile if the searchText matches
+      contactFilter["$or"] = [
+        { "contactdetail.email": { $regex: searchText, $options: "i" } },
+        { "contactdetail.contactName": { $regex: searchText, $options: "i" } },
+        { "businessInfo.companyMobile": { $regex: searchText, $options: "i" } }
+      ];
+
+      // Add the contact filter to the searchFilters
+      searchFilters = { ...searchFilters, ...contactFilter };
+    }
+
+    // Perform the search with the constructed filters
+    const leads = await Lead.find(searchFilters)
+      // Ensure you select the necessary fields, including 'followup'
+      .select("id leadDetails followup businessInfo contactdetail requirement createdAt") 
+      .exec();
+
+    // Return the response with filtered leads
+    res.status(200).json({ leads });
+
+  } catch (err) {
+    // Handle errors and return a response
+    res.status(500).json({ message: `Error while searching leads: ${err.message}` });
+  }
+};
+
+
